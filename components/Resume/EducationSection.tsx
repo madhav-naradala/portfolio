@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { GraduationCap, MapPin } from 'lucide-react';
+import { GraduationCap } from 'lucide-react';
 import type { ResumeData } from '@/data/resume';
 
 interface EducationSectionProps {
@@ -60,9 +60,9 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
       </motion.div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {education.map((item, index) => (
+        {education.map((item) => (
           <motion.article
-            key={`${item.institution}-${item.degree}-${index}`}
+            key={item.id}
             className="rounded-lg border border-accent/20 bg-secondary/40 p-6"
             variants={itemVariants}
             whileHover={{ y: -4 }}
@@ -71,23 +71,18 @@ export const EducationSection: React.FC<EducationSectionProps> = ({
               {item.degree}
             </h3>
 
-            <p className="mt-2 font-medium text-accent-light">
+            <p className="mt-1 text-gray-300">{item.field}</p>
+
+            <p className="mt-3 font-medium text-accent-light">
               {item.institution}
             </p>
 
-            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-300">
-              {'location' in item && item.location && (
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4 text-accent" />
-                  {item.location}
-                </span>
-              )}
+            <p className="mt-2 text-sm text-gray-300">
+              Graduated: {item.graduationYear}
+            </p>
 
-              {'period' in item && item.period && <span>{item.period}</span>}
-            </div>
-
-            {'gpa' in item && item.gpa && (
-              <p className="mt-3 text-sm text-gray-300">
+            {item.gpa && (
+              <p className="mt-2 text-sm text-gray-300">
                 GPA: {item.gpa}
               </p>
             )}
