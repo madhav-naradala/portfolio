@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 import type { ResumeData } from '@/data/resume';
 
 interface ResumeHeaderProps {
@@ -40,7 +40,7 @@ export const ResumeHeader: React.FC<ResumeHeaderProps> = ({ personal }) => {
 
   return (
     <motion.div
-      className="mb-12 rounded-lg border border-accent/20 bg-gradient-to-r from-primary via-secondary to-primary p-8"
+      className="mb-12 rounded-lg border border-blue-400/20 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-8"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -53,7 +53,7 @@ export const ResumeHeader: React.FC<ResumeHeaderProps> = ({ personal }) => {
       </motion.h1>
 
       <motion.p
-        className="mb-6 text-lg leading-relaxed text-accent-light"
+        className="mb-6 text-lg leading-relaxed text-slate-300"
         variants={itemVariants}
       >
         {personal.summary}
@@ -65,30 +65,20 @@ export const ResumeHeader: React.FC<ResumeHeaderProps> = ({ personal }) => {
       >
         <motion.a
           href={`mailto:${personal.email}`}
-          className="group flex items-center gap-2 text-gray-300 transition-colors hover:text-accent-light"
+          className="group flex items-center gap-2 text-slate-300 transition-colors hover:text-blue-300"
           variants={itemVariants}
           whileHover={{ x: 5 }}
           aria-label={`Email ${personal.name}`}
         >
-          <Mail className="h-5 w-5 transition-colors group-hover:text-accent" />
+          <Mail className="h-5 w-5 transition-colors group-hover:text-blue-300" />
           <span className="truncate">{personal.email}</span>
         </motion.a>
 
-        {personal.phone && (
-          <motion.div
-            className="flex items-center gap-2 text-gray-300"
-            variants={itemVariants}
-          >
-            <Phone className="h-5 w-5 text-accent" />
-            <span>{personal.phone}</span>
-          </motion.div>
-        )}
-
         <motion.div
-          className="flex items-center gap-2 text-gray-300"
+          className="flex items-center gap-2 text-slate-300"
           variants={itemVariants}
         >
-          <MapPin className="h-5 w-5 text-accent" />
+          <MapPin className="h-5 w-5 text-blue-300" />
           <span>{personal.location}</span>
         </motion.div>
       </motion.div>
