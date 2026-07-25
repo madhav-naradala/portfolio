@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Code2 } from 'lucide-react';
 import type { ResumeData } from '@/data/resume';
 import { Badge } from './Badge';
 
@@ -13,13 +12,13 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   const containerVariants = {
     hidden: {
       opacity: 0,
-      y: 20,
+      y: 30,
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.7,
         staggerChildren: 0.1,
       },
     },
@@ -28,52 +27,83 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   const itemVariants = {
     hidden: {
       opacity: 0,
-      y: 12,
+      y: 24,
     },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.4,
+        duration: 0.65,
+        ease: [0.22, 1, 0.36, 1] as const,
       },
     },
   };
 
   return (
     <motion.section
-      className="mb-12"
+      id="skills"
+      className="apple-section scroll-mt-16"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.05 }}
     >
-      <motion.div
-        className="mb-6 flex items-center gap-3"
-        variants={itemVariants}
-      >
-        <Code2 className="h-7 w-7 text-accent" />
+      <motion.div className="mb-16" variants={itemVariants}>
+        <p className="mb-5 text-sm font-medium uppercase tracking-[0.22em] text-blue-400">
+          Capabilities
+        </p>
 
-        <h2 className="text-2xl font-bold text-white md:text-3xl">
-          Skills
+        <h2 className="apple-heading">
+          Technology built
+          <span className="block text-white/30">for scale.</span>
         </h2>
+
+        <p className="apple-description">
+          A modern full-stack toolkit for building enterprise applications,
+          distributed systems, APIs, cloud solutions, and responsive user
+          experiences.
+        </p>
       </motion.div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {skills.map((group) => (
+      <div className="grid gap-7 md:grid-cols-2">
+        {skills.map((group, index) => (
           <motion.article
             key={group.category}
-            className="rounded-lg border border-accent/20 bg-secondary/40 p-6"
+            className={`apple-card p-7 sm:p-10 ${
+              index === 0 ? 'md:col-span-2' : ''
+            }`}
             variants={itemVariants}
-            whileHover={{ y: -4 }}
+            whileHover={{
+              y: -6,
+              transition: {
+                duration: 0.25,
+              },
+            }}
           >
-            <h3 className="mb-4 text-lg font-semibold text-accent-light">
-              {group.category}
-            </h3>
+            <div className="relative z-10">
+              <p className="mb-4 text-sm font-medium uppercase tracking-[0.18em] text-blue-400">
+                {String(index + 1).padStart(2, '0')}
+              </p>
 
-            <div className="flex flex-wrap gap-2">
-              {group.skills.map((skill) => (
-                <Badge key={`${group.category}-${skill}`} text={skill} />
-              ))}
+              <h3
+                className={`font-semibold tracking-[-0.035em] text-white ${
+                  index === 0
+                    ? 'text-3xl sm:text-4xl'
+                    : 'text-2xl sm:text-3xl'
+                }`}
+              >
+                {group.category}
+              </h3>
+
+              <div className="mt-7 flex flex-wrap gap-2">
+                {group.skills.map((skill) => (
+                  <Badge
+                    key={`${group.category}-${skill}`}
+                    text={skill}
+                    variant={index === 0 ? 'primary' : 'secondary'}
+                  />
+                ))}
+              </div>
             </div>
           </motion.article>
         ))}
