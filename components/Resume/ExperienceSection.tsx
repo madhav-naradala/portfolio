@@ -117,7 +117,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
         </p>
       </motion.div>
 
-      <div className="grid gap-7 lg:grid-cols-2">
+      <div className="group/experience-grid grid items-start gap-7 lg:grid-cols-2">
         {experiences.map((experience, index) => {
           const accent = accentStyles[experience.accent];
 
@@ -125,11 +125,21 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
             <motion.article
               key={experience.id}
               tabIndex={0}
-              className={`apple-card group cursor-default outline-none transition-all duration-500 ${accent.border} ${accent.glow} ${
-                index === 0
-                  ? 'min-h-[430px] p-7 sm:p-10 lg:col-span-2 lg:p-14'
-                  : 'min-h-[370px] p-7 sm:p-10'
-              }`}
+              className={`apple-card group relative cursor-default self-start overflow-hidden outline-none transition-all duration-500
+                group-hover/experience-grid:scale-[0.985]
+                group-hover/experience-grid:opacity-45
+                hover:!scale-100
+                hover:!opacity-100
+                focus-visible:!scale-100
+                focus-visible:!opacity-100
+                ${accent.border}
+                ${accent.glow}
+                ${
+                  index === 0
+                    ? 'min-h-[430px] p-7 sm:p-10 lg:col-span-2 lg:p-14'
+                    : 'min-h-[370px] p-7 sm:p-10'
+                }
+              `}
               variants={itemVariants}
               whileHover={{
                 y: -7,
@@ -146,7 +156,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                 className={`absolute left-0 top-0 h-1 w-0 ${accent.line} transition-all duration-500 group-hover:w-full group-focus-visible:w-full`}
               />
 
-              <div className="relative z-10 flex h-full flex-col">
+              <div className="relative z-10 flex h-full min-h-[300px] flex-col">
                 <div className="flex items-start justify-between gap-6">
                   <div>
                     <h3
@@ -166,9 +176,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                     </p>
                   </div>
 
-                  <ArrowUpRight
-                    className={`h-6 w-6 shrink-0 text-white/25 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-focus-visible:-translate-y-1 group-focus-visible:translate-x-1 ${accent.text}`}
-                  />
+                  <ArrowUpRight className="h-6 w-6 shrink-0 text-white/25 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 group-focus-visible:-translate-y-1 group-focus-visible:translate-x-1" />
                 </div>
 
                 <div className="mt-6 flex items-center gap-2 text-sm text-white/40">
@@ -190,33 +198,6 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                   </p>
                 </div>
 
-                <div className="grid transition-all duration-500 ease-out md:grid-rows-[0fr] md:opacity-0 md:group-hover:mt-8 md:group-hover:grid-rows-[1fr] md:group-hover:opacity-100 md:group-focus-visible:mt-8 md:group-focus-visible:grid-rows-[1fr] md:group-focus-visible:opacity-100">
-                  <div className="overflow-hidden">
-                    <div className="border-t border-white/10 pt-7">
-                      <p className="mb-4 text-xs font-medium uppercase tracking-[0.2em] text-white/30">
-                        Key contributions
-                      </p>
-
-                      <ul className="space-y-3 text-sm leading-6 text-white/55">
-                        {experience.description
-                          .slice(0, 4)
-                          .map((description, descriptionIndex) => (
-                            <li
-                              key={`${experience.id}-${descriptionIndex}`}
-                              className="flex gap-3"
-                            >
-                              <span
-                                className={`mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full ${accent.line}`}
-                              />
-
-                              <span>{description}</span>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
                 <div className="mt-auto flex flex-wrap gap-2 pt-9">
                   {experience.technologies.map((technology) => (
                     <Badge
@@ -229,6 +210,56 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({
                 <p className="mt-6 hidden text-xs text-white/25 md:block">
                   Hover to view key contributions
                 </p>
+              </div>
+
+              <div className="pointer-events-none absolute inset-0 z-20 flex translate-y-6 flex-col rounded-[inherit] bg-black/80 p-7 opacity-0 backdrop-blur-2xl transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 sm:p-10">
+                <div className="flex items-start justify-between gap-6">
+                  <div>
+                    <p className={`text-sm font-medium ${accent.text}`}>
+                      {experience.position}
+                    </p>
+
+                    <h4
+                      className={`mt-2 font-semibold tracking-[-0.04em] text-white ${
+                        index === 0
+                          ? 'text-4xl sm:text-5xl'
+                          : 'text-3xl'
+                      }`}
+                    >
+                      {experience.company}
+                    </h4>
+                  </div>
+
+                  <ArrowUpRight className={`h-6 w-6 ${accent.text}`} />
+                </div>
+
+                <div className="mt-6 flex items-center gap-2 text-sm text-white/45">
+                  <Calendar className={`h-4 w-4 ${accent.text}`} />
+                  <span>{experience.duration}</span>
+                </div>
+
+                <div className="mt-auto">
+                  <p className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-white/40">
+                    Key contributions
+                  </p>
+
+                  <ul className="space-y-3 text-sm leading-6 text-white/75 sm:text-base sm:leading-7">
+                    {experience.description
+                      .slice(0, 4)
+                      .map((description, descriptionIndex) => (
+                        <li
+                          key={`${experience.id}-${descriptionIndex}`}
+                          className="flex gap-3"
+                        >
+                          <span
+                            className={`mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full ${accent.line}`}
+                          />
+
+                          <span>{description}</span>
+                        </li>
+                      ))}
+                  </ul>
+                </div>
               </div>
             </motion.article>
           );
