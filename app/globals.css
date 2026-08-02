@@ -144,3 +144,679 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+body.cave-mode-active {
+  overflow: hidden;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.cave-mode-active,
+  body.cave-mode-active * {
+    cursor: none !important;
+  }
+}
+
+/* Hidden stone */
+
+.secret-cave-trigger {
+  opacity: 0.055;
+  transform: scale(0.88);
+  touch-action: none;
+
+  transition:
+    opacity 450ms ease,
+    color 450ms ease,
+    transform 450ms ease,
+    text-shadow 450ms ease;
+}
+
+.secret-cave-trigger:hover,
+.secret-cave-trigger:focus-visible {
+  opacity: 0.38;
+  color: #d5a05c;
+  transform: scale(1);
+  text-shadow: 0 0 18px rgba(213, 160, 92, 0.4);
+}
+
+.secret-cave-trigger-holding {
+  opacity: 0.75;
+  color: #f0c27b;
+  transform: scale(1.08);
+  text-shadow:
+    0 0 12px rgba(240, 194, 123, 0.55),
+    0 0 30px rgba(180, 101, 42, 0.3);
+}
+
+/* Cave */
+
+.cave-mode-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  overflow: hidden;
+  background: #010100;
+  color: #e3c597;
+
+  touch-action: none;
+  isolation: isolate;
+}
+
+.cave-wall {
+  --cave-light-x: 50vw;
+  --cave-light-y: 50vh;
+
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      rgba(80, 45, 23, 0.2),
+      transparent 40%
+    ),
+    linear-gradient(
+      135deg,
+      #130c07 0%,
+      #090604 48%,
+      #170d07 100%
+    );
+}
+
+.cave-wall-texture {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0.45;
+
+  background-image:
+    radial-gradient(
+      circle at 15% 20%,
+      rgba(255, 208, 135, 0.06) 0 1px,
+      transparent 2px
+    ),
+    radial-gradient(
+      circle at 72% 34%,
+      rgba(255, 208, 135, 0.04) 0 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 45% 78%,
+      rgba(0, 0, 0, 0.38) 0 2px,
+      transparent 4px
+    );
+
+  background-size:
+    62px 71px,
+    97px 83px,
+    83px 91px;
+
+  filter: contrast(120%);
+}
+
+.cave-darkness {
+  --cave-light-x: 50vw;
+  --cave-light-y: 50vh;
+
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      circle 240px at var(--cave-light-x) var(--cave-light-y),
+      rgba(0, 0, 0, 0.05) 0%,
+      rgba(0, 0, 0, 0.15) 28%,
+      rgba(0, 0, 0, 0.62) 60%,
+      rgba(0, 0, 0, 0.96) 100%
+    );
+}
+
+.cave-darkness::before {
+  content: '';
+
+  position: absolute;
+
+  left: calc(var(--cave-light-x) - 175px);
+  top: calc(var(--cave-light-y) - 175px);
+
+  width: 350px;
+  height: 350px;
+
+  border-radius: 999px;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 210, 120, 0.17) 0%,
+      rgba(255, 135, 39, 0.09) 37%,
+      transparent 72%
+    );
+
+  filter: blur(15px);
+  mix-blend-mode: screen;
+
+  animation: cave-light-flicker 190ms infinite alternate;
+}
+
+/* Torch */
+
+.cave-torch {
+  position: fixed;
+  z-index: 40;
+
+  width: 48px;
+  height: 118px;
+
+  transform: translate(-24%, -42%);
+
+  pointer-events: none;
+
+  filter:
+    drop-shadow(0 0 8px rgba(255, 170, 60, 0.72))
+    drop-shadow(0 0 26px rgba(255, 83, 15, 0.32));
+}
+
+.cave-flame {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.cave-flame-outer {
+  animation: cave-flame-outer 175ms infinite alternate;
+}
+
+.cave-flame-inner {
+  animation: cave-flame-inner 125ms infinite alternate;
+}
+
+/* Cave controls */
+
+.cave-exit {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 60;
+
+  border: 1px solid rgba(255, 224, 170, 0.12);
+  border-radius: 999px;
+
+  background: rgba(12, 7, 4, 0.7);
+  padding: 10px 16px;
+
+  color: rgba(255, 232, 193, 0.55);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+
+  backdrop-filter: blur(18px);
+
+  transition:
+    color 250ms ease,
+    border-color 250ms ease,
+    background 250ms ease;
+}
+
+.cave-exit:hover {
+  border-color: rgba(255, 210, 138, 0.3);
+  background: rgba(47, 28, 15, 0.78);
+  color: rgba(255, 244, 221, 0.95);
+}
+
+.cave-guidance {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  z-index: 60;
+
+  transform: translateX(-50%);
+
+  width: max-content;
+  max-width: calc(100vw - 48px);
+  margin: 0;
+
+  color: rgba(255, 225, 181, 0.24);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+
+  pointer-events: none;
+}
+
+/* Cave animations */
+
+@keyframes cave-flame-outer {
+  from {
+    transform: scaleX(0.94) scaleY(0.95) rotate(-1deg);
+  }
+
+  to {
+    transform: scaleX(1.07) scaleY(1.08) rotate(2deg);
+  }
+}
+
+@keyframes cave-flame-inner {
+  from {
+    transform: scaleX(1.04) scaleY(0.92);
+  }
+
+  to {
+    transform: scaleX(0.93) scaleY(1.09);
+  }
+}
+
+@keyframes cave-light-flicker {
+  from {
+    opacity: 0.78;
+    transform: scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@media (max-width: 640px) {
+  .cave-torch {
+    width: 42px;
+    height: 104px;
+  }
+
+  .cave-darkness {
+    background:
+      radial-gradient(
+        circle 175px at var(--cave-light-x) var(--cave-light-y),
+        rgba(0, 0, 0, 0.04) 0%,
+        rgba(0, 0, 0, 0.18) 30%,
+        rgba(0, 0, 0, 0.68) 62%,
+        rgba(0, 0, 0, 0.97) 100%
+      );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cave-flame,
+  .cave-darkness::before {
+    animation: none;
+  }
+}
+
+.stone-cracks {
+  opacity: 0.18;
+  transition:
+    opacity 350ms ease,
+    filter 350ms ease;
+}
+
+.secret-cave-trigger:hover .stone-cracks,
+.secret-cave-trigger:focus-visible .stone-cracks {
+  opacity: 0.46;
+}
+
+.stone-cracks-active {
+  opacity: 1;
+  filter:
+    drop-shadow(0 0 3px rgba(255, 205, 128, 0.75))
+    drop-shadow(0 0 8px rgba(255, 123, 30, 0.42));
+}
+
+.secret-cave-trigger svg {
+  transition:
+    transform 450ms ease,
+    color 450ms ease,
+    filter 450ms ease;
+}
+
+.secret-cave-trigger:hover svg,
+.secret-cave-trigger:focus-visible svg {
+  color: #d6a15d;
+  transform: scale(1.05) rotate(-1deg);
+  filter: drop-shadow(0 0 7px rgba(214, 161, 93, 0.22));
+}
+
+.secret-cave-trigger-holding svg {
+  color: #f1c27d;
+  transform: scale(1.1);
+  filter:
+    drop-shadow(0 0 7px rgba(241, 194, 125, 0.55))
+    drop-shadow(0 0 18px rgba(188, 94, 30, 0.28));
+}
+/* Secret cave entrance container */
+
+.secret-cave-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hidden stone */
+
+.secret-cave-trigger {
+  position: relative;
+
+  display: flex;
+  width: 42px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.8);
+
+  opacity: 0.055;
+  transform: scale(0.9);
+
+  touch-action: none;
+  user-select: none;
+
+  transition:
+    opacity 800ms ease,
+    color 800ms ease,
+    transform 800ms ease,
+    filter 800ms ease;
+}
+
+/*
+  The stone does not immediately react.
+  It slowly warms after the visitor remains curious.
+*/
+.secret-cave-trigger:hover,
+.secret-cave-trigger:focus-visible {
+  opacity: 0.38;
+  color: #d2a061;
+
+  transform: scale(1);
+
+  filter:
+    drop-shadow(0 0 3px rgba(210, 160, 97, 0.12))
+    drop-shadow(0 0 12px rgba(177, 92, 34, 0.12));
+
+  transition-delay: 900ms;
+}
+
+.secret-cave-trigger:focus-visible {
+  outline: 1px solid rgba(240, 194, 125, 0.32);
+  outline-offset: 3px;
+}
+
+.secret-cave-trigger-holding {
+  opacity: 0.68;
+  color: #e4b36f;
+
+  transform: scale(1.04);
+
+  filter:
+    drop-shadow(0 0 7px rgba(231, 176, 104, 0.38))
+    drop-shadow(0 0 18px rgba(164, 75, 24, 0.2));
+
+  transition-delay: 0ms;
+}
+
+.secret-cave-trigger-awakening {
+  opacity: 1;
+  color: #f1c27d;
+
+  animation: stone-awakening-shake 700ms ease-in-out 550ms;
+  filter:
+    drop-shadow(0 0 8px rgba(241, 194, 125, 0.72))
+    drop-shadow(0 0 24px rgba(190, 84, 22, 0.42));
+
+  transition-delay: 0ms;
+}
+
+/* Hold progress ring */
+
+.secret-cave-hold-ring {
+  position: absolute;
+  inset: 3px;
+
+  border: 1px solid rgba(241, 194, 125, 0.14);
+  border-radius: 999px;
+
+  opacity: 0;
+  transform: scale(0.55);
+
+  transition:
+    opacity 180ms ease,
+    transform 900ms linear;
+}
+
+.secret-cave-hold-ring-active {
+  opacity: 0.72;
+  transform: scale(1);
+}
+
+/* Stone SVG */
+
+.stone-symbol {
+  overflow: visible;
+
+  transition:
+    color 700ms ease,
+    transform 700ms ease,
+    filter 700ms ease;
+}
+
+.stone-body {
+  transform-box: fill-box;
+  transform-origin: center;
+
+  transition:
+    transform 500ms ease,
+    opacity 500ms ease;
+}
+
+.stone-cracks {
+  color: #efbb72;
+}
+
+.stone-crack {
+  opacity: 0.08;
+
+  stroke-dasharray: 42;
+  stroke-dashoffset: 42;
+
+  transition:
+    opacity 500ms ease,
+    stroke-dashoffset 500ms ease;
+}
+
+.secret-cave-trigger:hover .stone-crack {
+  opacity: 0.3;
+  stroke-dashoffset: 30;
+
+  transition-delay: 1400ms;
+}
+
+.stone-symbol-awakening .stone-crack {
+  opacity: 1;
+
+  animation: stone-crack-reveal 780ms forwards;
+}
+
+.stone-symbol-awakening .stone-crack-two {
+  animation-delay: 150ms;
+}
+
+.stone-symbol-awakening .stone-crack-three {
+  animation-delay: 290ms;
+}
+
+.stone-symbol-awakening .stone-crack-four {
+  animation-delay: 420ms;
+}
+
+.stone-symbol-awakening .stone-body {
+  animation: stone-body-pulse 900ms ease-in-out forwards;
+}
+
+/* Falling dust */
+
+.stone-dust {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+
+  width: 58px;
+  height: 86px;
+
+  transform: translateX(-50%);
+
+  pointer-events: none;
+  z-index: 4;
+}
+
+.stone-dust-particle {
+  position: absolute;
+  top: 0;
+
+  width: 2px;
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: rgba(212, 164, 103, 0.65);
+
+  opacity: 0;
+
+  animation-name: stone-dust-fall;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+/* Full-page fade after the stone breaks */
+
+.cave-entry-fade {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+
+  background: #000;
+
+  pointer-events: none;
+
+  opacity: 0;
+
+  animation: cave-entry-darkness 1900ms ease-in forwards;
+}
+
+/* Stone animations */
+
+@keyframes stone-crack-reveal {
+  0% {
+    opacity: 0.12;
+    stroke-dashoffset: 42;
+  }
+
+  55% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.9;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes stone-body-pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  35% {
+    transform: scale(1.07);
+  }
+
+  62% {
+    transform: scale(0.98);
+  }
+
+  100% {
+    transform: scale(1.02);
+  }
+}
+
+@keyframes stone-awakening-shake {
+  0%,
+  100% {
+    transform: translateX(0) scale(1.04);
+  }
+
+  18% {
+    transform: translateX(-1px) scale(1.04);
+  }
+
+  36% {
+    transform: translateX(1px) scale(1.04);
+  }
+
+  52% {
+    transform: translateX(-1.5px) scale(1.04);
+  }
+
+  68% {
+    transform: translateX(1px) scale(1.04);
+  }
+
+  84% {
+    transform: translateX(-0.5px) scale(1.04);
+  }
+}
+
+@keyframes stone-dust-fall {
+  0% {
+    opacity: 0;
+    transform: translateY(-3px) translateX(0) scale(0.7);
+  }
+
+  18% {
+    opacity: 0.7;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translateY(58px)
+      translateX(6px)
+      scale(1.25);
+  }
+}
+
+@keyframes cave-entry-darkness {
+  0%,
+  48% {
+    opacity: 0;
+  }
+
+  78% {
+    opacity: 0.86;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .secret-cave-trigger,
+  .stone-symbol,
+  .stone-body,
+  .stone-crack,
+  .stone-dust-particle,
+  .cave-entry-fade {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    transition-delay: 0ms !important;
+  }
+}
